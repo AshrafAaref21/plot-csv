@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from PIL import Image
-import plotly.express as px
 
 from utils import miso
 
@@ -20,7 +19,8 @@ st.set_page_config(
 
 _, cl, _ = st.columns([1.5, 6, 1.5])
 with cl:
-    st.title(':sparkles: Plot data from CSV file (MR. Asif Khan)')
+    # st.title('Data Visualization - Plot data from CSV file')
+    st.title('Plot data from CSV file (MR. Asif Khan)')
 st.divider()
 
 data_uploader = st.file_uploader("Upload datasets", type=['csv', 'xlsx'])
@@ -31,6 +31,11 @@ if data_uploader is not None:
     else:
         df = pd.read_excel(data_uploader)
 
+    df["profit_total"] = df["profit_total"].cumsum()
+    df["profit_long"] = df["profit_long"].cumsum()
+    df["profit_short"] = df["profit_short"].cumsum()
+
+    st.dataframe(df.cumsum())
     st.write('')
     st.success('Your Data Successfully Uploaded')
 
