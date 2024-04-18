@@ -4,7 +4,7 @@ import pandas as pd
 from PIL import Image
 import plotly.express as px
 
-from utils import miso, CSS
+from utils import miso
 
 
 # open Logo file
@@ -20,7 +20,7 @@ st.set_page_config(
 
 _, cl, _ = st.columns([1.5, 6, 1.5])
 with cl:
-    st.title('Plot data from CSV file (MR. Asif Khan)')
+    st.title(':sparkles: Plot data from CSV file (MR. Asif Khan)')
 st.divider()
 
 data_uploader = st.file_uploader("Upload datasets", type=['csv', 'xlsx'])
