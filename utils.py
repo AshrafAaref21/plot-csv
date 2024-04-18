@@ -9,13 +9,15 @@ def miso(df):
         fig = px.line(
             df,
             x='date',
-            y=['profit_short', 'profit_long', 'profit_total'],
+            y=['profit_short', 'profit_long', 'profit_total', 'mwh_total'],
             labels={'value': 'Profit Cumulative', 'variable': ''},
         )
 
-        newnames = {"profit_total": "Profit",
+        newnames = {"profit_total": "Total",
                     "profit_long": "Long",
-                    "profit_short": "Short"}
+                    "profit_short": "Short",
+                    "mwh_total": "Economic"
+                    }
 
         fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
         # fig.update_layout(
