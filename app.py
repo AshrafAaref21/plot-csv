@@ -20,7 +20,7 @@ st.set_page_config(
 
 _, cl, _ = st.columns([1.5, 6, 1.5])
 with cl:
-    st.title('Data Visualization - Plot data from CSV file')
+    st.title('Plot data from CSV file (MR. Asif Khan)')
 st.divider()
 
 data_uploader = st.file_uploader("Upload datasets", type=['csv', 'xlsx'])
