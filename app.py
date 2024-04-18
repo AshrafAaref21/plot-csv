@@ -35,7 +35,6 @@ if data_uploader is not None:
     df["profit_long"] = df["profit_long"].cumsum()
     df["profit_short"] = df["profit_short"].cumsum()
 
-    st.dataframe(df.cumsum())
     st.write('')
     st.success('Your Data Successfully Uploaded')
 
