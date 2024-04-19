@@ -42,8 +42,8 @@ def miso(df):
                     'variable': ''}
         )
         newnames = {
-            "mwh_total": "Losses",
-            "win_count": "Wins"}
+            "mwh_total": "# Economics",
+            "win_count": "# Wins"}
 
         fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
         # fig.update_layout(
