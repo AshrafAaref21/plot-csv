@@ -9,14 +9,13 @@ def miso(df):
         fig = px.line(
             df,
             x='date',
-            y=['profit_short', 'profit_long', 'profit_total', 'mwh_total'],
+            y=['profit_short', 'profit_long', 'profit_total'],
             labels={'value': 'Profit Cumulative', 'variable': ''},
         )
 
         newnames = {"profit_total": "Total",
                     "profit_long": "Long",
-                    "profit_short": "Short",
-                    "mwh_total": "Economic"
+                    "profit_short": "Short"
                     }
 
         fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
@@ -36,14 +35,14 @@ def miso(df):
         fig = px.line(
             df,
             x='date',
-            y=['loss_count', 'win_count'],
+            y=['mwh_total', 'win_count'],
             # color_discrete_sequence=px.colors.qualitative.Antique,
             range_y=[y_min, y_max],
             labels={'value': 'Wins and Losses',
                     'variable': ''}
         )
         newnames = {
-            "loss_count": "Losses",
+            "mwh_total": "Losses",
             "win_count": "Wins"}
 
         fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
