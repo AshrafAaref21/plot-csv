@@ -3,7 +3,7 @@ import numpy as np
 import plotly.express as px
 
 
-def miso(df):
+def visual(df):
     tab1, tab2 = st.tabs(["Plot Profit Cumulative", "Wins VS Losses"])
     with tab1:
         fig = px.line(
