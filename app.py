@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from PIL import Image
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 import json
 from utils import visual, to_date
@@ -27,7 +27,7 @@ def main():
     cl1, cl2 = st.columns(2)
     with cl1:
         start_date = st.date_input('From Date',
-                                   value=datetime.today(),
+                                   value=datetime.today() - timedelta(weeks=2),
                                    )
     with cl2:
         end_date = st.date_input('To Date',
