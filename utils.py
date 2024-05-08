@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 import plotly.express as px
-
+from datetime import datetime, timedelta
 
 def visual(df):
     tab1, tab2 = st.tabs(["Plot Profit Cumulative", "Wins VS Losses"])
@@ -52,6 +52,9 @@ def visual(df):
 
         st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
+
+def to_date(date):
+    return datetime(1970, 1, 1) + timedelta(days=date)
 
 def CSS():
     st.markdown("""<style>
