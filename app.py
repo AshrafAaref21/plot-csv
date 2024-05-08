@@ -59,8 +59,8 @@ def main():
             'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data)
 
         if str(response.status_code)[0] != '2':
-            st.error(f'Bad Request with status code {response.status_code}')
-            st.error(str(response.content))
+            st.error(f'Bad Request with status code {response.status_code} :name_badge:')
+            st.error(f"{str(response.content)} :name_badge:")
             if str(response.status_code) == '500':
                 st.info(
                     'The [market, model, node] combination cannot be retrieved (likely nonexistent)')
@@ -76,15 +76,18 @@ def main():
                 dic[i['name']] = i['values']
 
             df = pd.DataFrame(dic)
-            st.dataframe(df)
-
-            df["profit_total"] = df["profit_total"].cumsum()
-            df["profit_long"] = df["profit_long"].cumsum()
-            df["profit_short"] = df["profit_short"].cumsum()
-
-            st.divider()
-
-            visual(df)
+            if len(df) > 0:
+                st.dataframe(df)
+    
+                df["profit_total"] = df["profit_total"].cumsum()
+                df["profit_long"] = df["profit_long"].cumsum()
+                df["profit_short"] = df["profit_short"].cumsum()
+    
+                st.divider()
+    
+                visual(df)
+            else:
+                st.info("There's no Records for this short period. :anchor:")
 
 
 if __name__ == '__main__':
