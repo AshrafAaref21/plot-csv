@@ -54,7 +54,7 @@ def visual(df):
 
 
 def to_date(date):
-    return datetime(1970, 1, 1) + timedelta(days=date)
+    return (datetime(1970, 1, 1) + timedelta(days=date)).strftime('%Y-%m-%d')
 
 def CSS():
     st.markdown("""<style>
