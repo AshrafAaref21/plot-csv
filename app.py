@@ -4,7 +4,7 @@ from PIL import Image
 from datetime import datetime
 import requests
 import json
-from utils import visual
+from utils import visual, to_date
 
 
 def main():
@@ -77,6 +77,7 @@ def main():
 
             df = pd.DataFrame(dic)
             if len(df) > 0:
+                df['date'] = df['date'].apply(to_date)
                 st.dataframe(df)
     
                 df["profit_total"] = df["profit_total"].cumsum()
