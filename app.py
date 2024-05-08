@@ -73,9 +73,9 @@ def main():
         if str(response.status_code)[0] == '2':
             dic = {}
             for i in json.loads(response.content)['columns']:
-                # if i["datatype"] == "Float64":
-                #     dic[i['name']] = [round(j,2) for j in i['values']]
-                # else:
+                if i["datatype"] == "Float64" and i['values'][0] != None:
+                    dic[i['name']] = [round(j,2) for j in i['values']]
+                else:
                     dic[i['name']] = i['values']
 
             df = pd.DataFrame(dic)
