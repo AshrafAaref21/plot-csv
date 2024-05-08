@@ -36,7 +36,7 @@ def main():
 
     market = st.text_input('Input Market Name')
     model = st.text_input('Input Model Name')
-    node = st.selectbox('Select Node Name', ['miso', 'nyis'])
+    node = st.text_input('Input Node Name')
 
     data = {
         'from_date': start_date,
