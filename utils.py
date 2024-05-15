@@ -1,7 +1,10 @@
 import streamlit as st
 import numpy as np
 import plotly.express as px
+from pandas import DataFrame
 from datetime import datetime, timedelta
+import json
+
 
 def visual(df):
     tab1, tab2 = st.tabs(["Plot Profit Cumulative", "Wins VS Losses"])
@@ -55,6 +58,22 @@ def visual(df):
 
 def to_date(date):
     return (datetime(1970, 1, 1) + timedelta(days=date)).strftime('%Y-%m-%d')
+
+
+def read_response(response) -> DataFrame:
+    """
+    Read the Data From the http post request. 
+    Returns the data as dataframe object.
+    """
+    dic = {}
+    for i in json.loads(response.content)['columns']:
+        if i["datatype"] == "Float64" and i['values'][0] != None:
+            dic[i['name']] = [round(j, 2) for j in i['values']]
+        else:
+            dic[i['name']] = i['values']
+
+    return DataFrame(dic)
+
 
 def CSS():
     st.markdown("""<style>

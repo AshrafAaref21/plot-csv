@@ -2,9 +2,8 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 from datetime import datetime, timedelta
-import requests
-import json
-from utils import visual, to_date
+
+from predictor import single_model, models_comparison
 
 
 def main():
@@ -38,60 +37,51 @@ def main():
     model = st.text_input('Input Model Name')
     node = st.text_input('Input Node Name')
 
-    data = {
+    base_data = {
         'from_date': start_date,
         'to_date': end_date,
         'market': market,
         'model': model,
         'node': node,
     }
-
     st.divider()
-    if start_date > end_date:
-        text = 'Fix the Dates'
-    else:
-        text = 'Send Request'
-    btn = st.button(text, type='primary',
-                    disabled=start_date > end_date, use_container_width=True)
 
-    if btn:
-        response = requests.post(
-            'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data)
+    col1, col2 = st.columns([1.5, 2])
+    with col1:
+        radio = st.radio(
+            'Options', ['Single Model', 'Add Model'], index=0)
 
-        if str(response.status_code)[0] != '2':
-            st.error(f'Bad Request with status code {response.status_code} :name_badge:')
-            st.error(f"{str(response.content)} :name_badge:")
-            if str(response.status_code) == '500':
-                st.info(
-                    'The [market, model, node] combination cannot be retrieved (likely nonexistent)')
+    # Create buttons
+    with col2:
 
-        if start_date > end_date:
-            st.warning('(From Date) is greater than (To Date)')
-            st.info(
-                'The dates range is invalid: end date must be later than start date')
+        if radio == 'Single Model':
 
-        if str(response.status_code)[0] == '2':
-            dic = {}
-            for i in json.loads(response.content)['columns']:
-                if i["datatype"] == "Float64" and i['values'][0] != None:
-                    dic[i['name']] = [round(j,2) for j in i['values']]
-                else:
-                    dic[i['name']] = i['values']
-
-            df = pd.DataFrame(dic)
-            if len(df) > 0:
-                df['date'] = df['date'].apply(to_date)
-                st.dataframe(df)
-    
-                df["profit_total"] = df["profit_total"].cumsum()
-                df["profit_long"] = df["profit_long"].cumsum()
-                df["profit_short"] = df["profit_short"].cumsum()
-    
-                st.divider()
-    
-                visual(df)
+            if start_date > end_date:
+                text = 'Fix the Dates'
             else:
-                st.info("There's no Records for this short period. :anchor:")
+                text = 'Send Request'
+
+            st.write('')
+            st.write('')
+            btn = st.button(text, type='primary',
+                            disabled=start_date > end_date, use_container_width=True)
+        else:
+            if start_date > end_date:
+                text = 'Fix the Dates'
+            else:
+                text = 'Send Requests'
+
+            data_2 = base_data.copy()
+
+            data_2['model'] = st.text_input('Input Second Model Name')
+
+            btn = st.button(text, type='primary',
+                            disabled=start_date > end_date, use_container_width=True)
+    if btn:
+        if radio == 'Single Model':
+            single_model(base_data)
+        else:
+            models_comparison(base_data, data_2)
 
 
 if __name__ == '__main__':
