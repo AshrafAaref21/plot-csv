@@ -45,16 +45,17 @@ def single_model(data):
 def models_comparison(data1, data2):
     cl1, _, cl2 = st.columns([5, 1, 5])
 
+    response_1 = requests.post(
+        'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data1)
+    
+    response_2 = requests.post(
+        'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data2)
     st.divider()
 
     with cl1:
-        response_1 = requests.post(
-            'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data1)
 
         output(response_1, data1)
 
     with cl2:
-        response_2 = requests.post(
-            'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data2)
 
         output(response_2, data2)
