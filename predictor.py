@@ -22,8 +22,6 @@ def output(response, data, callback=None):
 
     if str(response.status_code)[0] == '2':
         df = read_response(response=response)
-        df = df[['date', 'profit_short', 'profit_long', 'profit_total',
-                 'mwh_total', 'win_count']]
         if len(df) > 0:
             df['date'] = df['date'].apply(to_date)
 
@@ -33,9 +31,8 @@ def output(response, data, callback=None):
             df["profit_long"] = df["profit_long"].cumsum()
             df["profit_short"] = df["profit_short"].cumsum()
 
-            st.divider()
-
             if callback is not None:
+                st.divider()
                 callback(df)
         else:
             st.info("There's no Records for this short period. :anchor:")
@@ -63,15 +60,17 @@ def models_comparison(data1, data2):
 
     with cl1:
         st.subheader(f"Model {data1['model']}")
+
         df1 = output(response_1, data1)
         df1.set_index('date', inplace=True)
         df1.columns = [f"{i} ({data1['model']})" for i in df1.columns]
     with cl2:
         st.subheader(f"Model {data2['model']}")
+
         df2 = output(response_2, data2)
         df2.set_index('date', inplace=True)
         df2.columns = [f"{i} ({data2['model']})" for i in df2.columns]
 
     df = df1.join(df2)
-    st.dataframe(df)
+
     visual_compare(df, data1, data2)
