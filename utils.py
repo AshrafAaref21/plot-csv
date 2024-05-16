@@ -22,9 +22,7 @@ def visual(df):
                     }
 
         fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
-        # fig.update_layout(
-        #     hovermode="x"
-        # )
+
         st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
@@ -49,9 +47,6 @@ def visual(df):
             "win_count": "# Wins"}
 
         fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
-        # fig.update_layout(
-        #     hovermode="x"
-        # )
 
         st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
@@ -67,7 +62,7 @@ def visual_compare(df, models):
         *[f"profit_total ({i})" for i in models],
     ])
     st.write(df)
-    # st.dataframe(df)
+
     with tab1:
 
         fig = px.line(
@@ -123,18 +118,24 @@ def visual_compare(df, models):
 
 def models_visualizer(df):
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "Plot Total Profit Cumulative", "Plot Total Profit Cumulative",
-        "Plot Total Profit Cumulative", "Wins Plot", 'Economics Plot'
-    ])
+    tab1, tab2 = st.tabs(["Plot Profit Cumulative", "Wins VS Losses"])
 
     with tab1:
         fig = px.line(
             df,
             x='date',
-            y='profit_total',
-            color='model'
+            y=['profit_total', 'profit_long', 'profit_short'],
+            line_dash='model',
+            labels={'value': 'Profit Cumulative'}
         )
+
+        newnames = {}
+        for i in df.model.unique():
+            newnames[f"profit_total, {i}"] = f"Total, {i}"
+            newnames[f"profit_long, {i}"] = f"Long, {i}"
+            newnames[f"profit_short, {i}"] = f"Long, {i}"
+
+        fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
 
         fig.update_layout(
             hovermode="x"
@@ -146,65 +147,21 @@ def models_visualizer(df):
         fig = px.line(
             df,
             x='date',
-            y='profit_long',
-            color='model'
+            y=['mwh_total', 'win_count'],
+            line_dash='model',
+            # color_discrete_sequence=px.colors.qualitative.Antique,
+            labels={'value': 'Wins and Losses',
+                    'variable': ''}
         )
+        newnames = {}
+        for i in df.model.unique():
+            newnames[f"mwh_total, {i}"] = f"# Economics, {i}"
+            newnames[f"win_count, {i}"] = f"# Wins, {i}"
+
+        fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
         fig.update_layout(
             hovermode="x"
         )
-
-        st.plotly_chart(fig, theme="streamlit", use_container_width=True)
-
-    with tab3:
-        fig = px.line(
-            df,
-            x='date',
-            y='profit_short',
-            color='model'
-        )
-        fig.update_layout(
-            hovermode="x"
-        )
-
-        st.plotly_chart(fig, theme="streamlit", use_container_width=True)
-
-    with tab4:
-        fig = px.line(
-            df,
-            x='date',
-            y='win_count',
-            color='model',
-            # labels={'value': 'Wins and Losses',
-            #         'variable': ''}
-        )
-
-        # newnames = {
-        #     "mwh_total": "# Economics",
-        #     "win_count": "# Wins"}
-
-        # fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
-        fig.update_layout(
-            hovermode="x"
-        )
-
-        st.plotly_chart(fig, theme="streamlit", use_container_width=True)
-
-    with tab5:
-        fig = px.line(
-            df,
-            x='date',
-            y='mwh_total',
-            color='model',
-        )
-
-        # newnames = {
-        #     "mwh_total": "# Economics",
-        #     "win_count": "# Wins"}
-
-        # fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
-        # fig.update_layout(
-        #     hovermode="x"
-        # )
 
         st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 

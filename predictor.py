@@ -2,7 +2,7 @@ import requests
 import streamlit as st
 from pandas import concat
 
-from utils import read_response, to_date, visual, visual_compare, models_visualizer
+from utils import read_response, to_date, visual, models_visualizer
 
 
 def output(response, data):
@@ -25,15 +25,10 @@ def output(response, data):
         if len(df) > 0:
             df['date'] = df['date'].apply(to_date)
 
-            # st.dataframe(df)
-
             df["profit_total"] = df["profit_total"].cumsum()
             df["profit_long"] = df["profit_long"].cumsum()
             df["profit_short"] = df["profit_short"].cumsum()
 
-            # if callback is not None:
-            #     st.divider()
-            #     callback(df)
         else:
             st.info("There's no Records for this short period. :anchor:")
 
@@ -55,12 +50,12 @@ def models_comparison(data1, data2, show=False):
     response_1 = requests.post(
         'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data1)
     df1 = output(response_1, data1)
+    df1['model'] = data1['model']
 
     if ',' in data2['model']:
         models = data2.pop('model')
         models = models.split(',')
         models = [i.strip() for i in models]
-        df1['model'] = data1['model']
         ls = []
         for i in models:
             data2['model'] = i
@@ -71,29 +66,20 @@ def models_comparison(data1, data2, show=False):
             df2['model'] = i
             ls.append(df2)
 
-            # df2.set_index('date', inplace=True)
-            # df2.columns = [f"{i} ({data2['model']})" for i in df2.columns]
-
-            # df = df1.join(df2, how='left')
         df = concat([df1, *ls], axis=0)
         models_visualizer(df)
-        # visual_compare(df, models=[data1['model'], *models])
 
     else:
-
-        df1.set_index('date', inplace=True)
-        df1.columns = [f"{i} ({data1['model']})" for i in df1.columns]
 
         response_2 = requests.post(
             'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data2)
 
         df2 = output(response_2, data2)
-        df2.set_index('date', inplace=True)
-        df2.columns = [f"{i} ({data2['model']})" for i in df2.columns]
+        df2['model'] = data2['model']
 
-        df = df1.join(df2)
+        df = concat([df1, df2])
 
-        visual_compare(df, models=[data1['model'], data2['model']])
+        models_visualizer(df)
 
     if show:
         st.divider()
