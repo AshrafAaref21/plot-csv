@@ -37,6 +37,8 @@ def main():
     model = st.text_input('Input Model Name')
     node = st.text_input('Input Node Name')
 
+    show = st.checkbox('Show Data')
+
     base_data = {
         'from_date': start_date,
         'to_date': end_date,
@@ -79,9 +81,9 @@ def main():
                             disabled=start_date > end_date, use_container_width=True)
     if btn:
         if radio == 'Single Model':
-            single_model(base_data)
+            single_model(base_data, show)
         else:
-            models_comparison(base_data, data_2)
+            models_comparison(base_data, data_2, show)
 
 
 if __name__ == '__main__':

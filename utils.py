@@ -56,28 +56,37 @@ def visual(df):
         st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 
-def visual_compare(df, data1, data2):
+def visual_compare(df, models):
     tab1, tab2 = st.tabs(["Plot Profit Cumulative", "Wins VS Losses"])
+
+    for i in models:
+        st.write(f"profit_short ({i})" in df.columns)
+    st.write([
+        *[f"profit_short ({i})" for i in models],
+        *[f"profit_long ({i})" for i in models],
+        *[f"profit_total ({i})" for i in models],
+    ])
+    st.write(df)
+    # st.dataframe(df)
     with tab1:
 
         fig = px.line(
             df.reset_index(),
             x='date',
             y=[
-                f"profit_short ({data1['model']})", f"profit_long ({data1['model']})", f"profit_total ({data1['model']})",
-                f"profit_short ({data2['model']})", f"profit_long ({data2['model']})", f"profit_total ({data2['model']})"
+                *[f"profit_short ({i})" for i in models],
+                *[f"profit_long ({i})" for i in models],
+                *[f"profit_total ({i})" for i in models],
             ],
             labels={'value': 'Profit Cumulative', 'variable': ''},
 
         )
 
-        newnames = {f"profit_total ({data1['model']})": f"Total ({data1['model']})",
-                    f"profit_long ({data1['model']})": f"Long ({data1['model']})",
-                    f"profit_short ({data1['model']})": f"Short ({data1['model']})",
-                    f"profit_total ({data2['model']})": f"Total ({data2['model']})",
-                    f"profit_long ({data2['model']})": f"Long ({data2['model']})",
-                    f"profit_short ({data2['model']})": f"Short ({data2['model']})",
-                    }
+        newnames = {}
+        for i in models:
+            newnames[f"profit_total ({i})"] = f"Total ({i})"
+            newnames[f"profit_long ({i})"] = f"Long ({i})"
+            newnames[f"profit_short ({i})"] = f"Short ({i})"
 
         fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
 
@@ -88,37 +97,114 @@ def visual_compare(df, data1, data2):
         st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
-        # y_max = np.ceil(df.win_count.max() / 5) * 5 + 5
-        # if df.win_count.max() < df.loss_count.max():
-        #     y_max = np.ceil(df.loss_count.max() / 5) * 5 + 5
-        # y_min = np.floor(df.win_count.min() / 5) * 5 - 5
-        # if df.win_count.min() < df.loss_count.min():
-        #     y_min = np.floor(df.loss_count.min() / 5) * 5 - 5
-
         fig = px.line(
             df.reset_index(),
             x='date',
             y=[
-                f"mwh_total ({data1['model']})", f"win_count ({data1['model']})",
-                f"mwh_total ({data2['model']})", f"win_count ({data2['model']})"
+                *[f"mwh_total ({i})" for i in models],
+                *[f"win_count ({i})" for i in models],
             ],
-            # color_discrete_sequence=px.colors.qualitative.Antique,
-            # range_y=[y_min, y_max],
             labels={'value': 'Wins and Losses',
                     'variable': ''}
         )
-        newnames = {
-            f"mwh_total ({data1['model']})": f"# Economics ({data1['model']})",
-            f"win_count ({data1['model']})": f"# Wins ({data1['model']})",
-            f"mwh_total ({data2['model']})": f"# Economics ({data2['model']})",
-            f"win_count ({data2['model']})": f"# Wins ({data2['model']})",
 
-        }
+        newnames = {}
+        for i in models:
+            newnames[f"win_count ({i})"] = f"# Wins ({i})"
+            newnames[f"mwh_total ({i})"] = f"# Economics ({i})"
 
         fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
         fig.update_layout(
             hovermode="x"
         )
+
+        st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+
+
+def models_visualizer(df):
+
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+        "Plot Total Profit Cumulative", "Plot Total Profit Cumulative",
+        "Plot Total Profit Cumulative", "Wins Plot", 'Economics Plot'
+    ])
+
+    with tab1:
+        fig = px.line(
+            df,
+            x='date',
+            y='profit_total',
+            color='model'
+        )
+
+        fig.update_layout(
+            hovermode="x"
+        )
+
+        st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+
+    with tab2:
+        fig = px.line(
+            df,
+            x='date',
+            y='profit_long',
+            color='model'
+        )
+        fig.update_layout(
+            hovermode="x"
+        )
+
+        st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+
+    with tab3:
+        fig = px.line(
+            df,
+            x='date',
+            y='profit_short',
+            color='model'
+        )
+        fig.update_layout(
+            hovermode="x"
+        )
+
+        st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+
+    with tab4:
+        fig = px.line(
+            df,
+            x='date',
+            y='win_count',
+            color='model',
+            # labels={'value': 'Wins and Losses',
+            #         'variable': ''}
+        )
+
+        # newnames = {
+        #     "mwh_total": "# Economics",
+        #     "win_count": "# Wins"}
+
+        # fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
+        fig.update_layout(
+            hovermode="x"
+        )
+
+        st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+
+    with tab5:
+        fig = px.line(
+            df,
+            x='date',
+            y='mwh_total',
+            color='model',
+        )
+
+        # newnames = {
+        #     "mwh_total": "# Economics",
+        #     "win_count": "# Wins"}
+
+        # fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
+        # fig.update_layout(
+        #     hovermode="x"
+        # )
 
         st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
@@ -134,8 +220,9 @@ def read_response(response) -> DataFrame:
     """
     dic = {}
     for i in json.loads(response.content)['columns']:
-        if i["datatype"] == "Float64" and i['values'][0] != None:
-            dic[i['name']] = [round(j, 2) for j in i['values']]
+        if i["datatype"] == "Float64" and i['values'][0] not in [None, 'null', np.nan]:
+            dic[i['name']] = [round(j, 2) if type(
+                j) in [int, float] else None for j in i['values']]
         else:
             dic[i['name']] = i['values']
 
