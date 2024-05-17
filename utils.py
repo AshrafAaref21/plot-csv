@@ -133,7 +133,7 @@ def models_visualizer(df):
         for i in df.model.unique():
             newnames[f"profit_total, {i}"] = f"Total, {i}"
             newnames[f"profit_long, {i}"] = f"Long, {i}"
-            newnames[f"profit_short, {i}"] = f"Long, {i}"
+            newnames[f"profit_short, {i}"] = f"Short, {i}"
 
         fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
 
