@@ -37,7 +37,7 @@ def output(response, data):
 
 def single_model(data, show=False):
     response = requests.post(
-        'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data)
+        'https://quantum-zero-3jgsl.ondigitalocean.app/report', data=data)
 
     df = output(response, data)
     visual(df)
@@ -48,7 +48,7 @@ def single_model(data, show=False):
 
 def models_comparison(data1, data2, show=False):
     response_1 = requests.post(
-        'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data1)
+        'https://quantum-zero-3jgsl.ondigitalocean.app/report', data=data1)
     df1 = output(response_1, data1)
     df1['model'] = data1['model']
 
@@ -60,7 +60,7 @@ def models_comparison(data1, data2, show=False):
         for i in models:
             data2['model'] = i
             response = requests.post(
-                'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data2)
+                'https://quantum-zero-3jgsl.ondigitalocean.app/report', data=data2)
 
             df2 = output(response, data2)
             df2['model'] = i
@@ -72,7 +72,7 @@ def models_comparison(data1, data2, show=False):
     else:
 
         response_2 = requests.post(
-            'https://quantum-zero-bayfm.ondigitalocean.app/report', data=data2)
+            'https://quantum-zero-3jgsl.ondigitalocean.app/report', data=data2)
 
         df2 = output(response_2, data2)
         df2['model'] = data2['model']
